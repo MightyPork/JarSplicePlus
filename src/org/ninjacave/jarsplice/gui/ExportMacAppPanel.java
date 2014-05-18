@@ -24,7 +24,7 @@ import org.ninjacave.jarsplice.splicers.MacAppSplicer;
  * 
  * @author TheNinjaCave
  */
-public class MacAppPanel extends JPanel implements ActionListener {
+public class ExportMacAppPanel extends JPanel implements ActionListener {
 	
 	JFileChooser fileChooser;
 	JFileChooser iconChooser;
@@ -36,7 +36,7 @@ public class MacAppPanel extends JPanel implements ActionListener {
 	JTextField iconTextField;
 	
 	
-	public MacAppPanel(JarSpliceFrame jarSplice)
+	public ExportMacAppPanel(JarSpliceFrame jarSplice)
 	{
 		this.jarSplice = jarSplice;
 		

@@ -19,9 +19,7 @@ public class WinExeSplicer extends Splicer {
 	
 	private static final String stubFile = "res/stub.exe";
 	
-	
-	@Override
-	public void createFatJar(String[] jars, String[] natives, String output, String mainClass, String vmArgs) throws Exception
+	public void createExe(String[] jars, String[] natives, String output, String mainClass, String vmArgs) throws Exception
 	{
 		FileOutputStream fos = null;
 		InputStream is = null;
@@ -42,6 +40,7 @@ public class WinExeSplicer extends Splicer {
 			addFilesFromJars(jars, jos);
 			addNativesToJar(natives, jos);
 			addJarLauncher(jos);
+			makeExecutable(output);
 			
 		} finally {
 			if (fos != null) try {

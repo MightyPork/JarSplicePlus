@@ -18,7 +18,7 @@ import org.ninjacave.jarsplice.Utils;
  */
 public class MacAppSplicer extends Splicer {
 	
-	private void addZipEntry(String input, ZipOutputStream os, String name, boolean executableFile) throws Exception
+	private void addZipEntry(String input, ZipOutputStream os, String name, boolean executableFile) throws IOException
 	{
 		InputStream is = null;
 		
@@ -40,7 +40,7 @@ public class MacAppSplicer extends Splicer {
 	}
 	
 	
-	private void addZipFolder(ZipOutputStream os, String folderName) throws Exception
+	private void addZipFolder(ZipOutputStream os, String folderName) throws IOException
 	{
 		final ZipEntry zae = new ZipEntry(folderName);
 //		zae.setUnixMode(16877);
@@ -49,7 +49,7 @@ public class MacAppSplicer extends Splicer {
 	}
 	
 	
-	private void addFileAsZipEntry(File inputFile, ZipOutputStream os, String name) throws Exception
+	private void addFileAsZipEntry(File inputFile, ZipOutputStream os, String name) throws IOException
 	{
 		InputStream is = null;
 		
@@ -71,7 +71,7 @@ public class MacAppSplicer extends Splicer {
 	
 	
 	public void createAppBundle(String[] jars, String[] natives, String output, String mainClass, String vmArgs, String bundleName, String icon)
-			throws Exception
+			throws IOException
 	{
 		
 		final File tmpJarFile = new File(output + ".tmp");
@@ -102,7 +102,7 @@ public class MacAppSplicer extends Splicer {
 				iconFile = new File(icon);
 				
 				if ((!iconFile.exists()) || (!iconFile.isFile())) {
-					throw new Exception("Icon file not found at: " + icon);
+					throw new IOException("Icon file not found at: " + icon);
 				}
 				
 				addFileAsZipEntry(iconFile, zaos, appName + "Contents/Resources/" + iconFile.getName());
@@ -121,6 +121,8 @@ public class MacAppSplicer extends Splicer {
 			ps.flush();
 			
 			zaos.closeEntry();
+			makeExecutable(output);
+			
 		} finally {
 			
 			if (ps != null) try {
@@ -140,7 +142,7 @@ public class MacAppSplicer extends Splicer {
 	}
 	
 	
-	private void createTmpJar(String[] jars, String[] natives, File tmpJarFile, String mainClass, String vmArgs) throws Exception
+	private void createTmpJar(String[] jars, String[] natives, File tmpJarFile, String mainClass, String vmArgs) throws IOException
 	{
 		FileOutputStream fos = null;
 		JarOutputStream jos = null;

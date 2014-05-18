@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 
+import org.ninjacave.jarsplice.splicers.JarSplicer;
 import org.ninjacave.jarsplice.splicers.Splicer;
 
 
@@ -21,15 +22,15 @@ import org.ninjacave.jarsplice.splicers.Splicer;
  * 
  * @author TheNinjaCave
  */
-public class CreatePanel extends JPanel implements ActionListener {
+public class ExportJarPanel extends JPanel implements ActionListener {
 	
 	JFileChooser fileChooser;
 	JButton createButton;
 	JarSpliceFrame jarSplice;
-	Splicer splicer = new Splicer();
+	JarSplicer splicer = new JarSplicer();
 	
 	
-	public CreatePanel(JarSpliceFrame jarSplice)
+	public ExportJarPanel(JarSpliceFrame jarSplice)
 	{
 		this.jarSplice = jarSplice;
 		

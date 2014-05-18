@@ -1,6 +1,7 @@
 package org.ninjacave.jarsplice.splicers;
 
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,23 +21,7 @@ import org.ninjacave.jarsplice.Utils;
  * 
  * @author TheNinjaCave
  */
-public class Splicer {
-	
-	public void createFatJar(String[] jars, String[] natives, String output, String mainClass, String vmArgs) throws Exception
-	{
-		final Manifest manifest = getManifest(mainClass, vmArgs);
-		
-		final FileOutputStream fos = new FileOutputStream(output);
-		final JarOutputStream jos = new JarOutputStream(fos, manifest);
-		try {
-			addFilesFromJars(jars, jos);
-			addNativesToJar(natives, jos);
-			addJarLauncher(jos);
-		} finally {
-			jos.close();
-			fos.close();
-		}
-	}
+public abstract class Splicer {
 	
 	
 	protected Manifest getManifest(String mainClass, String vmArgs)
@@ -166,5 +151,12 @@ public class Splicer {
 	protected InputStream getResourceAsStream(String res)
 	{
 		return Thread.currentThread().getContextClassLoader().getResourceAsStream(res);
+	}
+
+
+	protected void makeExecutable(String output)
+	{
+		File f = new File(output);
+		f.setExecutable(true);
 	}
 }

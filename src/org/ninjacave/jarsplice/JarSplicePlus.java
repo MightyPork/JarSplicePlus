@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ninjacave.jarsplice.gui.JarSpliceFrame;
+import org.ninjacave.jarsplice.splicers.JarSplicer;
 import org.ninjacave.jarsplice.splicers.Splicer;
 
 
@@ -27,7 +28,7 @@ public class JarSplicePlus {
 		if (args.length == 0) {
 			new JarSpliceFrame();
 		} else {
-			final Splicer spl = new Splicer();
+			final JarSplicer spl = new JarSplicer();
 			
 			final List<String> inputJars = new ArrayList<String>();
 			final List<String> inputNatives = new ArrayList<String>();

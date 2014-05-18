@@ -20,7 +20,7 @@ import org.ninjacave.jarsplice.splicers.WinExeSplicer;
  * 
  * @author TheNinjaCave
  */
-public class WinExePanel extends JPanel implements ActionListener {
+public class ExportWinExePanel extends JPanel implements ActionListener {
 	
 	JFileChooser fileChooser;
 	JButton winExeButton;
@@ -29,7 +29,7 @@ public class WinExePanel extends JPanel implements ActionListener {
 	WinExeSplicer winExeSplicer = new WinExeSplicer();
 	
 	
-	public WinExePanel(JarSpliceFrame jarSplice)
+	public ExportWinExePanel(JarSpliceFrame jarSplice)
 	{
 		this.jarSplice = jarSplice;
 		
@@ -194,7 +194,7 @@ public class WinExePanel extends JPanel implements ActionListener {
 				final String mainClass = this.jarSplice.getMainClass();
 				final String vmArgs = this.jarSplice.getVmArgs();
 				try {
-					this.winExeSplicer.createFatJar(sources, natives, output, mainClass, vmArgs);
+					this.winExeSplicer.createExe(sources, natives, output, mainClass, vmArgs);
 					
 					JOptionPane.showMessageDialog(this, "EXE Successfully Created.", "Success", -1);
 				} catch (final Exception ex) {

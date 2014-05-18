@@ -17,10 +17,10 @@ public class JarSpliceFrame {
 	JarsPanel jarsPanel = new JarsPanel(this);
 	NativesPanel nativesPanel = new NativesPanel(this);
 	ClassPanel classPanel = new ClassPanel(this);
-	CreatePanel createPanel = new CreatePanel(this);
-	ShellScriptPanel shellScriptPanel = new ShellScriptPanel(this);
-	MacAppPanel macAppPanel = new MacAppPanel(this);
-	WinExePanel exePanel = new WinExePanel(this);
+	ExportJarPanel createPanel = new ExportJarPanel(this);
+	ExportShellScriptPanel shellScriptPanel = new ExportShellScriptPanel(this);
+	ExportMacAppPanel macAppPanel = new ExportMacAppPanel(this);
+	ExportWinExePanel exePanel = new ExportWinExePanel(this);
 	public File lastDirectory;
 	
 	

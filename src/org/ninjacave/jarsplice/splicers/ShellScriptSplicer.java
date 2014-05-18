@@ -18,8 +18,7 @@ public class ShellScriptSplicer extends Splicer {
 	String[] batchFile = { "#!/bin/sh", "FNAME=\"`readlink -f \"$0\"`\"", "java -jar \"$FNAME\"", "exit 0", "" };
 	
 	
-	@Override
-	public void createFatJar(String[] jars, String[] natives, String output, String mainClass, String vmArgs) throws Exception
+	public void createShellScript(String[] jars, String[] natives, String output, String mainClass, String vmArgs) throws Exception
 	{
 		FileOutputStream fos = null;
 		PrintStream pos = null;
@@ -43,6 +42,7 @@ public class ShellScriptSplicer extends Splicer {
 			addFilesFromJars(jars, jos);
 			addNativesToJar(natives, jos);
 			addJarLauncher(jos);
+			makeExecutable(output);
 			
 		} finally {
 			if (jos != null) try {
@@ -57,6 +57,7 @@ public class ShellScriptSplicer extends Splicer {
 				pos.close();
 			} catch (final Exception e) {}
 		}
+		
 	}
 	
 	

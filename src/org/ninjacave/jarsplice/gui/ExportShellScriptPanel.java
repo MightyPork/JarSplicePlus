@@ -18,7 +18,7 @@ import org.ninjacave.jarsplice.splicers.ShellScriptSplicer;
  * 
  * @author TheNinjaCave
  */
-public class ShellScriptPanel extends JPanel implements ActionListener {
+public class ExportShellScriptPanel extends JPanel implements ActionListener {
 	
 	JFileChooser fileChooser;
 	JButton shellScriptButton;
@@ -26,7 +26,7 @@ public class ShellScriptPanel extends JPanel implements ActionListener {
 	ShellScriptSplicer shellScriptSplicer = new ShellScriptSplicer();
 	
 	
-	public ShellScriptPanel(JarSpliceFrame jarSplice)
+	public ExportShellScriptPanel(JarSpliceFrame jarSplice)
 	{
 		this.jarSplice = jarSplice;
 		
@@ -125,7 +125,7 @@ public class ShellScriptPanel extends JPanel implements ActionListener {
 				final String mainClass = this.jarSplice.getMainClass();
 				final String vmArgs = this.jarSplice.getVmArgs();
 				try {
-					this.shellScriptSplicer.createFatJar(sources, natives, output, mainClass, vmArgs);
+					this.shellScriptSplicer.createShellScript(sources, natives, output, mainClass, vmArgs);
 					
 					JOptionPane.showMessageDialog(this, "ShellScript Successfully Created.", "Success", -1);
 				} catch (final Exception ex) {
