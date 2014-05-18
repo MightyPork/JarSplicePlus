@@ -138,9 +138,10 @@ public class Splicer {
 			final String launcherPath = JarSplicePlusLauncher.class.getName().replace('.', '/') + ".class";
 			
 			in = getClass().getResourceAsStream("/" + launcherPath);
-			
-			System.out.println("Launcher path: " + launcherPath);
-			
+
+			out.putNextEntry(new ZipEntry(launcherPath.substring(0, launcherPath.lastIndexOf('/'))));
+			out.closeEntry();			
+
 			out.putNextEntry(new ZipEntry(launcherPath));
 			
 			Utils.copyStream(in, out);

@@ -36,6 +36,7 @@ public class JarSplicePlusLauncher {
 			arguments.add(javaPath);
 			
 			for (final String s : vmArgs.split(" ")) {
+				if(s.length()==0) continue;
 				arguments.add(s);
 			}
 			
@@ -47,6 +48,8 @@ public class JarSplicePlusLauncher {
 			for (final String arg : cliArgs) {
 				arguments.add(arg);
 			}
+			
+			System.out.println("Launching with args: "+arguments);
 			
 			final ProcessBuilder processBuilder = new ProcessBuilder(arguments);
 			processBuilder.redirectErrorStream(true);
@@ -74,7 +77,7 @@ public class JarSplicePlusLauncher {
 			br = new BufferedReader(isr);
 			String line;
 			while ((line = br.readLine()) != null) {
-				System.out.println(line);
+				System.out.println("> " + line);
 			}
 			
 		} finally {
