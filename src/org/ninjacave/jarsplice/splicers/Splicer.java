@@ -10,6 +10,7 @@ import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import org.ninjacave.jarsplice.JarSplicePlusLauncher;
 import org.ninjacave.jarsplice.Utils;
@@ -21,7 +22,6 @@ import org.ninjacave.jarsplice.Utils;
  * @author TheNinjaCave
  */
 public abstract class Splicer {
-	
 	
 	protected Manifest getManifest(String mainClass, String vmArgs)
 	{
@@ -86,6 +86,7 @@ public abstract class Splicer {
 			
 			if (shouldAddNativeToJar(native1)) {
 				
+				// false positive
 				@SuppressWarnings("resource")
 				InputStream in = null;
 				
@@ -108,10 +109,7 @@ public abstract class Splicer {
 	}
 	
 	
-	protected boolean shouldAddNativeToJar(String native1)
-	{
-		return true;
-	}
+	protected abstract boolean shouldAddNativeToJar(String native1);
 	
 	
 	protected void addJarLauncher(JarOutputStream out) throws IOException
@@ -121,7 +119,7 @@ public abstract class Splicer {
 			
 			final String launcherPath = JarSplicePlusLauncher.class.getName().replace('.', '/') + ".class";
 			
-			in = getClass().getResourceAsStream("/" + launcherPath);
+			in = Splicer.class.getResourceAsStream("/" + launcherPath);
 			
 			out.putNextEntry(new ZipEntry(launcherPath.substring(0, launcherPath.lastIndexOf('/'))));
 			out.closeEntry();
@@ -140,20 +138,68 @@ public abstract class Splicer {
 	}
 	
 	
-	protected String getFileName(String ref)
+	protected static void addZipFile(ZipOutputStream zos, File inputFile, String name) throws IOException
+	{
+		InputStream is = null;
+		
+		try {
+			is = new FileInputStream(inputFile);
+			
+			final ZipEntry zae = new ZipEntry(name);
+			zos.putNextEntry(zae);
+			Utils.copyStream(is, zos);
+			zos.closeEntry();
+			
+		} finally {
+			if (is != null) try {
+				is.close();
+			} catch (final IOException e) {}
+		}
+	}
+	
+	
+	protected static void addZipFile(ZipOutputStream zos, String input, String name) throws IOException
+	{
+		InputStream is = null;
+		
+		try {
+			is = getResourceAsStream(input);
+			
+			final ZipEntry zae = new ZipEntry(name);
+			zos.putNextEntry(zae);
+			Utils.copyStream(is, zos);
+			zos.closeEntry();
+			
+		} finally {
+			if (is != null) try {
+				is.close();
+			} catch (final IOException e) {}
+		}
+	}
+	
+	
+	protected static void addZipFolder(ZipOutputStream zos, String folderName) throws IOException
+	{
+		final ZipEntry zae = new ZipEntry(folderName);
+		zos.putNextEntry(zae);
+		zos.closeEntry();
+	}
+	
+	
+	protected static String getFileName(String ref)
 	{
 		ref = ref.replace('\\', '/');
 		return ref.substring(ref.lastIndexOf('/') + 1);
 	}
 	
 	
-	protected InputStream getResourceAsStream(String res)
+	protected static InputStream getResourceAsStream(String res)
 	{
 		return Thread.currentThread().getContextClassLoader().getResourceAsStream(res);
 	}
 	
 	
-	protected void makeExecutable(String output)
+	protected static void makeExecutable(String output)
 	{
 		final File f = new File(output);
 		f.setExecutable(true);

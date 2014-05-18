@@ -15,7 +15,7 @@ import org.ninjacave.jarsplice.splicers.JarSplicer;
  */
 public class JarSplicePlus {
 	
-	public enum ArgType
+	private enum ArgType
 	{
 		NONE, INPUTJARS, INPUTNATIVES, MAINCLASS, PARAMETERS, OUTPUT
 	}
@@ -129,8 +129,7 @@ public class JarSplicePlus {
 	
 	public static void error(String text)
 	{
-		System.out.println("Error: " + text);
-		System.out.println("");
+		System.out.println("Error: " + text + "\n");
 		help();
 		System.exit(1);
 	}
