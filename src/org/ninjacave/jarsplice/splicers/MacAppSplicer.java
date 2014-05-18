@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.ninjacave.jarsplice.JarSplicePlusLauncher;
+import org.ninjacave.jarsplice.export.Launcher;
 
 
 /**
@@ -136,7 +136,7 @@ public class MacAppSplicer extends Splicer {
 				
 				plist.keyString("JVMVersion", "1.6+");
 				
-				plist.keyString("MainClass", JarSplicePlusLauncher.class.getName());
+				plist.keyString("MainClass", Launcher.class.getName());
 				plist.keyString("WorkingDirectory", "$APP_PACKAGE/Contents/Resources/Java");
 				
 				plist.dictOpen("Properties");				

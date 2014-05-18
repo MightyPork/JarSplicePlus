@@ -1,4 +1,4 @@
-package org.ninjacave.jarsplice;
+package org.ninjacave.jarsplice.export;
 
 
 import java.io.*;
@@ -18,12 +18,12 @@ import java.util.jar.Manifest;
  * 
  * @author TheNinjaCave
  */
-public class JarSplicePlusLauncher {
+public class Launcher {
 	
-	private boolean jspVerbose;
+	private boolean jsplVerbose;
 	
 	
-	public JarSplicePlusLauncher(String[] cliArgs) throws Exception
+	public Launcher(String[] cliArgs) throws Exception
 	{
 		final File file = getCodeSourceLocation();
 		final String nativeDirectory = getNativeDirectory();
@@ -33,8 +33,8 @@ public class JarSplicePlusLauncher {
 		
 		// parse launcher args
 		for (final String s : cliArgs) {
-			if (s.equalsIgnoreCase("--jspl:verbose")) {
-				jspVerbose = true;
+			if (s.equalsIgnoreCase("--jspl-verbose")) {
+				jsplVerbose = true;
 			}
 		}
 		
@@ -57,11 +57,11 @@ public class JarSplicePlusLauncher {
 			
 			for (final String arg : cliArgs) {
 				if (arg.length() == 0) continue;
-				if (arg.startsWith("--jspl:")) continue;
+				if (arg.startsWith("--jspl")) continue;
 				arguments.add(arg);
 			}
 			
-			if (jspVerbose) {
+			if (jsplVerbose) {
 				System.out.print("== JarSplicePlus ==\n> ");
 				for (final String arg : arguments) {
 					if (arg.startsWith("-")) System.out.print("\n\t");
@@ -96,7 +96,7 @@ public class JarSplicePlusLauncher {
 			br = new BufferedReader(isr);
 			String line;
 			while ((line = br.readLine()) != null) {
-				if (jspVerbose) System.out.print("JSP> ");
+				if (jsplVerbose) System.out.print("JSP> ");
 				System.out.println(line);
 			}
 			
@@ -118,25 +118,54 @@ public class JarSplicePlusLauncher {
 	
 	public void extractNatives(File file, String nativeDirectory) throws Exception
 	{
-		final JarFile jarFile = new JarFile(file, false);
-		final Enumeration<?> entities = jarFile.entries();
+		JarFile jarFile = null;
 		
-		while (entities.hasMoreElements()) {
-			final JarEntry entry = (JarEntry) entities.nextElement();
+		try {
 			
-			if ((!entry.isDirectory()) && (entry.getName().indexOf('/') == -1)) {
-				if (isNativeFile(entry.getName())) {
-					final InputStream in = jarFile.getInputStream(jarFile.getEntry(entry.getName()));
-					final OutputStream out = new FileOutputStream(nativeDirectory + File.separator + entry.getName());
-					
-					copyStream(in, out, 65535);
-					
-					in.close();
-					out.close();
+			jarFile = new JarFile(file, false);
+			
+			final Enumeration<?> entities = jarFile.entries();
+			
+			while (entities.hasMoreElements()) {
+				final JarEntry entry = (JarEntry) entities.nextElement();
+				
+				if ((!entry.isDirectory()) && (entry.getName().indexOf('/') == -1)) {
+					if (isNativeFile(entry.getName())) {
+						
+						InputStream in = null;
+						// false positive
+						@SuppressWarnings("resource")
+						OutputStream out = null;
+						
+						try {
+							
+							in = jarFile.getInputStream(jarFile.getEntry(entry.getName()));
+							out = new FileOutputStream(nativeDirectory + File.separator + entry.getName());
+							
+							final byte[] buffer = new byte[65535];
+							int n;
+							while (-1 != (n = in.read(buffer))) {
+								out.write(buffer, 0, n);
+							}
+							
+						} finally {
+							if (in != null) try {
+								in.close();
+							} catch (final IOException e) {}
+							
+							if (out != null) try {
+								out.close();
+							} catch (final IOException e) {}
+						}
+					}
 				}
 			}
+			
+		} finally {
+			if (jarFile != null) try {
+				jarFile.close();
+			} catch (final IOException e) {}
 		}
-		jarFile.close();
 	}
 	
 	
@@ -146,11 +175,13 @@ public class JarSplicePlusLauncher {
 		final String name = entryName.toLowerCase();
 		
 		if (osName.startsWith("Win")) {
-			if (name.endsWith(".dll")) return true;
+			return name.endsWith(".dll");
+			
 		} else if (osName.startsWith("Linux")) {
-			if (name.endsWith(".so")) return true;
-		} else if (((osName.startsWith("Mac")) || (osName.startsWith("Darwin"))) && ((name.endsWith(".jnilib")) || (name.endsWith(".dylib")))) {
-			return true;
+			return name.endsWith(".so");
+			
+		} else if (osName.startsWith("Mac") || osName.startsWith("Darwin")) {
+			return name.endsWith(".jnilib") || name.endsWith(".dylib");
 		}
 		
 		return false;
@@ -213,7 +244,7 @@ public class JarSplicePlusLauncher {
 	public File getCodeSourceLocation()
 	{
 		try {
-			return new File(JarSplicePlusLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+			return new File(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 		} catch (final URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -222,22 +253,9 @@ public class JarSplicePlusLauncher {
 	}
 	
 	
-	private static long copyStream(InputStream in, OutputStream out, int buffer_size) throws IOException
-	{
-		final byte[] buffer = new byte[buffer_size];
-		int n = 0;
-		long count = 0L;
-		while (-1 != (n = in.read(buffer))) {
-			out.write(buffer, 0, n);
-			count += n;
-		}
-		return count;
-	}
-	
-	
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception
 	{
-		final JarSplicePlusLauncher fatJarLauncher = new JarSplicePlusLauncher(args);
+		new Launcher(args);
 	}
 }

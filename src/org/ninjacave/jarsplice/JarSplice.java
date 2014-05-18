@@ -13,7 +13,7 @@ import org.ninjacave.jarsplice.splicers.JarSplicer;
  * 
  * @author Luis Quesada
  */
-public class JarSplicePlus {
+public class JarSplice {
 	
 	private enum ArgType
 	{
