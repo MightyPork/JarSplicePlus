@@ -20,6 +20,9 @@ import java.util.jar.Manifest;
  */
 public class JarSplicePlusLauncher {
 	
+	private boolean jspVerbose;
+	
+	
 	public JarSplicePlusLauncher(String[] cliArgs) throws Exception
 	{
 		final File file = getCodeSourceLocation();
@@ -27,6 +30,13 @@ public class JarSplicePlusLauncher {
 		final String mainClass = getMainClass(file);
 		final String vmArgs = getVmArgs(file);
 		final String javaPath = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+		
+		// parse launcher args
+		for (String s : cliArgs) {
+			if (s.equalsIgnoreCase("--jsp:verbose")) {
+				jspVerbose = true;
+			}
+		}
 		
 		try {
 			extractNatives(file, nativeDirectory);
@@ -36,7 +46,7 @@ public class JarSplicePlusLauncher {
 			arguments.add(javaPath);
 			
 			for (final String s : vmArgs.split(" ")) {
-				if(s.length()==0) continue;
+				if (s.length() == 0) continue;
 				arguments.add(s);
 			}
 			
@@ -46,10 +56,19 @@ public class JarSplicePlusLauncher {
 			arguments.add(mainClass);
 			
 			for (final String arg : cliArgs) {
+				if (arg.length() == 0) continue;
+				if (arg.startsWith("--jsp:")) continue;
 				arguments.add(arg);
 			}
 			
-			System.out.println("Launching with args: "+arguments);
+			if (jspVerbose) {
+				System.out.print("== JarSplicePlus ==\n> ");
+				for (String arg : arguments) {
+					if (arg.startsWith("-")) System.out.print("\n\t");
+					System.out.print(arg + " ");
+				}
+				System.out.println();
+			}
 			
 			final ProcessBuilder processBuilder = new ProcessBuilder(arguments);
 			processBuilder.redirectErrorStream(true);
@@ -77,7 +96,8 @@ public class JarSplicePlusLauncher {
 			br = new BufferedReader(isr);
 			String line;
 			while ((line = br.readLine()) != null) {
-				System.out.println("> " + line);
+				if (jspVerbose) System.out.print("JSP> ");
+				System.out.println(line);
 			}
 			
 		} finally {
