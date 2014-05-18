@@ -4,10 +4,10 @@ package org.ninjacave.jarsplice.splicers;
 import java.io.*;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.ninjacave.jarsplice.JatSplicePlusLauncher;
+import org.ninjacave.jarsplice.JarSplicePlusLauncher;
 import org.ninjacave.jarsplice.Utils;
 
 
@@ -18,19 +18,19 @@ import org.ninjacave.jarsplice.Utils;
  */
 public class MacAppSplicer extends Splicer {
 	
-	private void addZipEntry(String input, ZipArchiveOutputStream os, String name, boolean executableFile) throws Exception
+	private void addZipEntry(String input, ZipOutputStream os, String name, boolean executableFile) throws Exception
 	{
 		InputStream is = null;
 		
 		try {
 			is = getResourceAsStream(input);
 			
-			final ZipArchiveEntry zae = new ZipArchiveEntry(name);
-			if (executableFile) zae.setUnixMode(33261);
-			else zae.setUnixMode(33188);
-			os.putArchiveEntry(zae);
+			final ZipEntry zae = new ZipEntry(name);
+//			if (executableFile) zae.setUnixMode(33261);
+//			else zae.setUnixMode(33188);
+			os.putNextEntry(zae);
 			Utils.copyStream(is, os);
-			os.closeArchiveEntry();
+			os.closeEntry();
 			
 		} finally {
 			if (is != null) try {
@@ -40,27 +40,27 @@ public class MacAppSplicer extends Splicer {
 	}
 	
 	
-	private void addZipFolder(ZipArchiveOutputStream os, String folderName) throws Exception
+	private void addZipFolder(ZipOutputStream os, String folderName) throws Exception
 	{
-		final ZipArchiveEntry zae = new ZipArchiveEntry(folderName);
-		zae.setUnixMode(16877);
-		os.putArchiveEntry(zae);
-		os.closeArchiveEntry();
+		final ZipEntry zae = new ZipEntry(folderName);
+//		zae.setUnixMode(16877);
+		os.putNextEntry(zae);
+		os.closeEntry();
 	}
 	
 	
-	private void addFileAsZipEntry(File inputFile, ZipArchiveOutputStream os, String name) throws Exception
+	private void addFileAsZipEntry(File inputFile, ZipOutputStream os, String name) throws Exception
 	{
 		InputStream is = null;
 		
 		try {
 			is = new FileInputStream(inputFile);
 			
-			final ZipArchiveEntry zae = new ZipArchiveEntry(name);
-			zae.setUnixMode(33188);
-			os.putArchiveEntry(zae);
+			final ZipEntry zae = new ZipEntry(name);
+//			zae.setUnixMode(33188);
+			os.putNextEntry(zae);
 			Utils.copyStream(is, os);
-			os.closeArchiveEntry();
+			os.closeEntry();
 			
 		} finally {
 			if (is != null) try {
@@ -77,12 +77,12 @@ public class MacAppSplicer extends Splicer {
 		final File tmpJarFile = new File(output + ".tmp");
 		
 		FileOutputStream fos = null;
-		ZipArchiveOutputStream zaos = null;
+		ZipOutputStream zaos = null;
 		PrintStream ps = null;
 		
 		try {
 			fos = new FileOutputStream(output);
-			zaos = new ZipArchiveOutputStream(fos);
+			zaos = new ZipOutputStream(fos);
 			
 			final String appName = bundleName + ".app/";
 			
@@ -111,16 +111,16 @@ public class MacAppSplicer extends Splicer {
 			createTmpJar(jars, natives, tmpJarFile, mainClass, vmArgs);
 			addFileAsZipEntry(tmpJarFile, zaos, appName + "Contents/Resources/Java/app.jar");
 			
-			final ZipArchiveEntry zae = new ZipArchiveEntry(appName + "Contents/Info.plist");
-			zae.setUnixMode(33188);
-			zaos.putArchiveEntry(zae);
+			final ZipEntry zae = new ZipEntry(appName + "Contents/Info.plist");
+//			zae.setUnixMode(33188);
+			zaos.putNextEntry(zae);
 			
 			ps = new PrintStream(zaos);
 			final String iconFileName = iconFile != null ? iconFile.getName() : null;
 			writePlistFile(ps, bundleName, iconFileName);
 			ps.flush();
 			
-			zaos.closeArchiveEntry();
+			zaos.closeEntry();
 		} finally {
 			
 			if (ps != null) try {
@@ -199,7 +199,7 @@ public class MacAppSplicer extends Splicer {
 		pos.println("<key>JVMVersion</key>");
 		pos.println("<string>1.5+</string>");
 		pos.println("<key>MainClass</key>");
-		pos.println("<string>" + JatSplicePlusLauncher.class.getName() + "</string>");
+		pos.println("<string>" + JarSplicePlusLauncher.class.getName() + "</string>");
 		pos.println("<key>WorkingDirectory</key>");
 		pos.println("<string>$APP_PACKAGE/Contents/Resources/Java</string>");
 		pos.println("<key>Properties</key>");

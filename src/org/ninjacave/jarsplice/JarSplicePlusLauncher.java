@@ -18,9 +18,9 @@ import java.util.jar.Manifest;
  * 
  * @author TheNinjaCave
  */
-public class JatSplicePlusLauncher {
+public class JarSplicePlusLauncher {
 	
-	public JatSplicePlusLauncher(String[] cliArgs) throws Exception
+	public JarSplicePlusLauncher(String[] cliArgs) throws Exception
 	{
 		final File file = getCodeSourceLocation();
 		final String nativeDirectory = getNativeDirectory();
@@ -190,7 +190,7 @@ public class JatSplicePlusLauncher {
 	public File getCodeSourceLocation()
 	{
 		try {
-			return new File(JatSplicePlusLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+			return new File(JarSplicePlusLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 		} catch (final URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -215,6 +215,6 @@ public class JatSplicePlusLauncher {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception
 	{
-		final JatSplicePlusLauncher fatJarLauncher = new JatSplicePlusLauncher(args);
+		final JarSplicePlusLauncher fatJarLauncher = new JarSplicePlusLauncher(args);
 	}
 }

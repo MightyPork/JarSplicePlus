@@ -11,7 +11,7 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.ninjacave.jarsplice.JatSplicePlusLauncher;
+import org.ninjacave.jarsplice.JarSplicePlusLauncher;
 import org.ninjacave.jarsplice.Utils;
 
 
@@ -44,8 +44,7 @@ public class Splicer {
 		final Manifest manifest = new Manifest();
 		final Attributes attribute = manifest.getMainAttributes();
 		attribute.putValue("Manifest-Version", "1.0");
-		attribute.putValue("Main-Class", JatSplicePlusLauncher.class.getName());
-		attribute.putValue("Class-Path", ".");
+		attribute.putValue("Main-Class", JarSplicePlusLauncher.class.getName());
 		attribute.putValue("Launcher-Main-Class", mainClass);
 		attribute.putValue("Launcher-VM-Args", vmArgs);
 		return manifest;
@@ -67,7 +66,7 @@ public class Splicer {
 					
 					if (!entry.getName().toLowerCase().startsWith("meta-inf")) {
 						
-						if (!entry.getName().contains(JatSplicePlusLauncher.class.getSimpleName())) {
+						if (!entry.getName().contains(JarSplicePlusLauncher.class.getSimpleName())) {
 							
 							InputStream in = null;
 							try {
@@ -136,7 +135,7 @@ public class Splicer {
 		InputStream in = null;
 		try {
 			
-			final String launcherPath = JatSplicePlusLauncher.class.getName().replace('.', '/') + ".class";
+			final String launcherPath = JarSplicePlusLauncher.class.getName().replace('.', '/') + ".class";
 			
 			in = getClass().getResourceAsStream("/" + launcherPath);
 			
