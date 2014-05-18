@@ -18,11 +18,9 @@ JarSplice allows merging jar files and native libraries into a stand-alone execu
 History
 -------
 
-The tool was originally published in [The Ninja Cave](http://ninjacave.com), but it was abandoned by the original author in 2012, and left without a source code.
-
-[Luis Quesada](https://github.com/lquesada) took the time to decompile it using JAD, and created the [JarSplicePlus](https://github.com/lquesada/JarSplicePlus) repository. This version added command line arguments, and several minor tweaks.
-
-In 2014 [Ondřej Hruška](https://github.com/MightyPork) forked the repo for further development.)
+- The tool was originally published in [The Ninja Cave](http://ninjacave.com), but it was abandoned by the original author in 2012, and left without a source code.
+- [Luis Quesada](https://github.com/lquesada) took the time to decompile it using JAD, and created the [JarSplicePlus](https://github.com/lquesada/JarSplicePlus) repository. This version added command line arguments, and several minor tweaks.
+- In 2014 [Ondřej Hruška](https://github.com/MightyPork) forked the repo for further development.
 
 License
 -------
