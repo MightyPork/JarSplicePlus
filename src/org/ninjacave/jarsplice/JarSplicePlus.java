@@ -1,137 +1,143 @@
-package com.elezeta.jarspliceplus;
+package org.ninjacave.jarsplice;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ninjacave.jarsplice.core.Splicer;
 import org.ninjacave.jarsplice.gui.JarSpliceFrame;
+import org.ninjacave.jarsplice.splicers.Splicer;
 
-public class JarSplicePlusLauncher {
 
-	public enum Target {
-		NONE,
-		INPUTJARS,
-		INPUTNATIVES,
-		MAINCLASS,
-		PARAMETERS,
-		OUTPUT
-	}
-
-	public static void main(String args[]) {
-		if (args.length==0) {
-		    JarSpliceFrame gui = new JarSpliceFrame();
-		}
-		else {
-			Splicer spl = new Splicer();
+/**
+ * JarSplicePlus main class
+ * 
+ * @author Luis Quesada
+ */
+public class JarSplicePlus {
 	
-			List<String> inputJars = new ArrayList<String>();
-			List<String> inputNatives = new ArrayList<String>();
+	public enum ArgType
+	{
+		NONE, INPUTJARS, INPUTNATIVES, MAINCLASS, PARAMETERS, OUTPUT
+	}
+	
+	
+	@SuppressWarnings("unused")
+	public static void main(String args[])
+	{
+		if (args.length == 0) {
+			new JarSpliceFrame();
+		} else {
+			final Splicer spl = new Splicer();
+			
+			final List<String> inputJars = new ArrayList<String>();
+			final List<String> inputNatives = new ArrayList<String>();
 			String mainClass = null;
 			String parameters = null;
 			String output = null;
-	
-			Target current = Target.NONE;
-	
+			
+			ArgType current = ArgType.NONE;
+			
 			// Parse and check parameters
-	
-			for (int i = 0;i < args.length;i++) {
-				if (args[i].equals("-i"))
-					current = Target.INPUTJARS;
-				else if (args[i].equals("-n"))
-					current = Target.INPUTNATIVES;
-				else if (args[i].equals("-m"))
-					current = Target.MAINCLASS;
-				else if (args[i].equals("-p"))
-					current = Target.PARAMETERS;
-				else if (args[i].equals("-o"))
-					current = Target.OUTPUT;
+			
+			for (final String arg : args) {
+				if (arg.equals("-i")) current = ArgType.INPUTJARS;
+				else if (arg.equals("-n")) current = ArgType.INPUTNATIVES;
+				else if (arg.equals("-m")) current = ArgType.MAINCLASS;
+				else if (arg.equals("-p")) current = ArgType.PARAMETERS;
+				else if (arg.equals("-o")) current = ArgType.OUTPUT;
 				else {
 					switch (current) {
-					case NONE:
-						error("Invalid parameters.");
-						break;
-					case INPUTJARS:
-						System.out.println("Input JAR files: "+args[i]);
-						inputJars.add(args[i]);
-						break;
-					case INPUTNATIVES:
-						System.out.println("Input native files: "+args[i]);
-						inputNatives.add(args[i]);
-						break;
-					case MAINCLASS:
-						if (mainClass != null) {
-							error("Multiple declaration of main class.");
-						}
-						else {
-							mainClass = args[i];
-							System.out.println("Main class: "+args[i]);
-						}
-						current = Target.NONE;
-						break;
-					case PARAMETERS:
-						if (parameters != null) {
-							parameters = parameters+" "+args[i];
-							System.out.println("JVM Parameters: "+parameters);
-						}
-						else {
-							parameters = args[i];
-							System.out.println("JVM Parameters: "+parameters);
-						}
-						break;
-					case OUTPUT:
-						if (output != null) {
-							error("Multiple declaration of output JAR file.");
-						}
-						else {
-							output = args[i];
-							System.out.println("Output JAR file: "+args[i]);
-						}
-						current = Target.NONE;
-						break;
+						case NONE:
+							error("Invalid parameters.");
+							break;
+						
+						case INPUTJARS:
+							System.out.println("Input JAR files: " + arg);
+							inputJars.add(arg);
+							break;
+						
+						case INPUTNATIVES:
+							System.out.println("Input native files: " + arg);
+							inputNatives.add(arg);
+							break;
+						
+						case MAINCLASS:
+							if (mainClass != null) {
+								error("Multiple declaration of main class.");
+							} else {
+								mainClass = arg;
+								System.out.println("Main class: " + arg);
+							}
+							current = ArgType.NONE;
+							break;
+						
+						case PARAMETERS:
+							if (parameters != null) {
+								parameters = parameters + " " + arg;
+								System.out.println("JVM Parameters: " + parameters);
+							} else {
+								parameters = arg;
+								System.out.println("JVM Parameters: " + parameters);
+							}
+							break;
+						
+						case OUTPUT:
+							if (output != null) {
+								error("Multiple declaration of output JAR file.");
+							} else {
+								output = arg;
+								System.out.println("Output JAR file: " + arg);
+							}
+							current = ArgType.NONE;
+							break;
 					}
 				}
 			}
-	
+			
 			if (inputJars.size() == 0) {
 				error("No input JAR files.");
 			}
-	
+			
 			if (mainClass == null) {
 				error("No main class.");
 			}
-	
+			
 			if (output == null) {
 				error("No output JAR file.");
 			}
-	
+			
 			if (parameters == null) {
 				parameters = "";
 			}
-	
+			
 			// Invoke JarSplice
-	
+			
 			try {
-				spl.createFatJar(inputJars.toArray(new String[0]),inputNatives.toArray(new String[0]),output,mainClass,parameters);
-			} catch (Exception e) {
+				spl.createFatJar(inputJars.toArray(new String[0]), inputNatives.toArray(new String[0]), output, mainClass, parameters);
+			} catch (final Exception e) {
 				e.printStackTrace();
 				System.out.println("");
 				System.out.println("Error while building output JAR file.");
 				System.exit(1);
 			}
-	
-			System.out.println("Output JAR file "+output+" built successfully.");
+			
+			System.out.println("Output JAR file " + output + " built successfully.");
 			System.exit(0);
 		}
 	}
-
-	public static void error(String text) {
-		System.out.println("Error: "+text);
+	
+	
+	public static void error(String text)
+	{
+		System.out.println("Error: " + text);
 		System.out.println("");
 		help();
 		System.exit(1);
 	}
-
-	public static void help() {
+	
+	
+	public static void help()
+	{
 		System.out.println("JarSplicePlus - An Extension to JarSplice");
 		System.out.println("Copyright (c) 2013, Luis Quesada - https://github.com/lquesada");
 		System.out.println("");
@@ -209,4 +215,3 @@ public class JarSplicePlusLauncher {
 		System.out.println("");
 	}
 }
-
