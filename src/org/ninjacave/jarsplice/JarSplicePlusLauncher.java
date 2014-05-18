@@ -33,7 +33,7 @@ public class JarSplicePlusLauncher {
 		
 		// parse launcher args
 		for (String s : cliArgs) {
-			if (s.equalsIgnoreCase("--jsp:verbose")) {
+			if (s.equalsIgnoreCase("--jspl:verbose")) {
 				jspVerbose = true;
 			}
 		}
@@ -57,7 +57,7 @@ public class JarSplicePlusLauncher {
 			
 			for (final String arg : cliArgs) {
 				if (arg.length() == 0) continue;
-				if (arg.startsWith("--jsp:")) continue;
+				if (arg.startsWith("--jspl:")) continue;
 				arguments.add(arg);
 			}
 			
