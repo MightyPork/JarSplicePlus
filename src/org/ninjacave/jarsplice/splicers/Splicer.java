@@ -3,7 +3,6 @@ package org.ninjacave.jarsplice.splicers;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.Attributes;
@@ -123,10 +122,10 @@ public abstract class Splicer {
 			final String launcherPath = JarSplicePlusLauncher.class.getName().replace('.', '/') + ".class";
 			
 			in = getClass().getResourceAsStream("/" + launcherPath);
-
+			
 			out.putNextEntry(new ZipEntry(launcherPath.substring(0, launcherPath.lastIndexOf('/'))));
-			out.closeEntry();			
-
+			out.closeEntry();
+			
 			out.putNextEntry(new ZipEntry(launcherPath));
 			
 			Utils.copyStream(in, out);
@@ -152,11 +151,11 @@ public abstract class Splicer {
 	{
 		return Thread.currentThread().getContextClassLoader().getResourceAsStream(res);
 	}
-
-
+	
+	
 	protected void makeExecutable(String output)
 	{
-		File f = new File(output);
+		final File f = new File(output);
 		f.setExecutable(true);
 	}
 }

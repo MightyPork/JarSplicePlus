@@ -19,6 +19,7 @@ public class WinExeSplicer extends Splicer {
 	
 	private static final String stubFile = "res/stub.exe";
 	
+	
 	public void createExe(String[] jars, String[] natives, String output, String mainClass, String vmArgs) throws Exception
 	{
 		FileOutputStream fos = null;

@@ -14,7 +14,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileFilter;
 
 import org.ninjacave.jarsplice.splicers.JarSplicer;
-import org.ninjacave.jarsplice.splicers.Splicer;
 
 
 /**

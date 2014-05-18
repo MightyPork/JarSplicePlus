@@ -32,7 +32,7 @@ public class JarSplicePlusLauncher {
 		final String javaPath = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
 		
 		// parse launcher args
-		for (String s : cliArgs) {
+		for (final String s : cliArgs) {
 			if (s.equalsIgnoreCase("--jspl:verbose")) {
 				jspVerbose = true;
 			}
@@ -63,7 +63,7 @@ public class JarSplicePlusLauncher {
 			
 			if (jspVerbose) {
 				System.out.print("== JarSplicePlus ==\n> ");
-				for (String arg : arguments) {
+				for (final String arg : arguments) {
 					if (arg.startsWith("-")) System.out.print("\n\t");
 					System.out.print(arg + " ");
 				}

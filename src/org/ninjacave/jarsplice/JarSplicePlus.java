@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.ninjacave.jarsplice.gui.JarSpliceFrame;
 import org.ninjacave.jarsplice.splicers.JarSplicer;
-import org.ninjacave.jarsplice.splicers.Splicer;
 
 
 /**
