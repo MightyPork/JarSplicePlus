@@ -15,7 +15,15 @@ import java.util.jar.Manifest;
  */
 public class ShellScriptSplicer extends Splicer {
 	
-	String[] batchFile = { "#!/bin/sh", "FNAME=\"`readlink -f \"$0\"`\"", "java -jar \"$FNAME\"", "exit 0", "" };
+	//@formatter:off
+	private static String[] batchFile = { 
+			"#!/bin/sh",
+			"FNAME=\"`readlink -f \"$0\"`\"",
+			"java -jar \"$FNAME\" $@",
+			"exit 0",
+			""
+	};
+	//@formatter:on
 	
 	
 	public void createShellScript(String[] jars, String[] natives, String output, String mainClass, String vmArgs) throws Exception
