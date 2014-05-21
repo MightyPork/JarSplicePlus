@@ -1,4 +1,4 @@
-package org.ninjacave.jarsplice.export;
+package org.ninjacave.jarsplice;
 
 
 import java.io.*;
@@ -18,12 +18,12 @@ import java.util.jar.Manifest;
  * 
  * @author TheNinjaCave
  */
-public class Launcher {
+public class JarSpliceLauncher {
 	
 	private boolean jsplVerbose;
 	
 	
-	public Launcher(String[] cliArgs) throws Exception
+	public JarSpliceLauncher(String[] cliArgs) throws Exception
 	{
 		final File file = getCodeSourceLocation();
 		final String nativeDirectory = getNativeDirectory();
@@ -244,7 +244,7 @@ public class Launcher {
 	public File getCodeSourceLocation()
 	{
 		try {
-			return new File(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+			return new File(JarSpliceLauncher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 		} catch (final URISyntaxException e) {
 			e.printStackTrace();
 		}
@@ -256,6 +256,6 @@ public class Launcher {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception
 	{
-		new Launcher(args);
+		new JarSpliceLauncher(args);
 	}
 }

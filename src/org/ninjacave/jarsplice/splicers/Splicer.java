@@ -12,8 +12,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import org.ninjacave.jarsplice.JarSpliceLauncher;
 import org.ninjacave.jarsplice.Utils;
-import org.ninjacave.jarsplice.export.Launcher;
 
 
 /**
@@ -28,7 +28,7 @@ public abstract class Splicer {
 		final Manifest manifest = new Manifest();
 		final Attributes attribute = manifest.getMainAttributes();
 		attribute.putValue("Manifest-Version", "1.0");
-		attribute.putValue("Main-Class", Launcher.class.getName());
+		attribute.putValue("Main-Class", JarSpliceLauncher.class.getName());
 		attribute.putValue("Launcher-Main-Class", mainClass);
 		attribute.putValue("Launcher-VM-Args", vmArgs);
 		return manifest;
@@ -50,7 +50,7 @@ public abstract class Splicer {
 					
 					if (!entry.getName().toLowerCase().startsWith("meta-inf")) {
 						
-						if (!entry.getName().contains(Launcher.class.getSimpleName())) {
+						if (!entry.getName().contains(JarSpliceLauncher.class.getSimpleName())) {
 							
 							InputStream in = null;
 							try {
@@ -117,7 +117,7 @@ public abstract class Splicer {
 		InputStream in = null;
 		try {
 			
-			final String launcherPath = Launcher.class.getName().replace('.', '/') + ".class";
+			final String launcherPath = JarSpliceLauncher.class.getName().replace('.', '/') + ".class";
 			
 			in = Splicer.class.getResourceAsStream("/" + launcherPath);
 			
