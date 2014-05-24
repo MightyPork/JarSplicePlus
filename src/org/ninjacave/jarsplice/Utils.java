@@ -9,7 +9,7 @@ import java.io.OutputStream;
 /**
  * Utils class for JarSplicePlus
  * 
- * @author MightyPork
+ * @author Ondřej Hruška (MightyPork)
  */
 public class Utils {
 	
