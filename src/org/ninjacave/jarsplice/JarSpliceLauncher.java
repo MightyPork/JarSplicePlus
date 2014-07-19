@@ -23,8 +23,7 @@ public class JarSpliceLauncher {
 	private boolean jsplVerbose;
 	
 	
-	public JarSpliceLauncher(String[] cliArgs) throws Exception
-	{
+	public JarSpliceLauncher(String[] cliArgs) throws Exception {
 		final File file = getCodeSourceLocation();
 		final String nativeDirectory = getNativeDirectory();
 		final String mainClass = getMainClass(file);
@@ -133,8 +132,6 @@ public class JarSpliceLauncher {
 					if (isNativeFile(entry.getName())) {
 						
 						InputStream in = null;
-						// false positive
-						@SuppressWarnings("resource")
 						OutputStream out = null;
 						
 						try {
@@ -223,21 +220,39 @@ public class JarSpliceLauncher {
 	
 	public String getMainClass(File file) throws Exception
 	{
-		final JarFile jarFile = new JarFile(file);
-		final Manifest manifest = jarFile.getManifest();
-		final Attributes attribute = manifest.getMainAttributes();
-		
-		return attribute.getValue("Launcher-Main-Class");
+		JarFile jarFile = null;
+		try {
+			
+			jarFile = new JarFile(file);
+			final Manifest manifest = jarFile.getManifest();
+			final Attributes attribute = manifest.getMainAttributes();
+			
+			return attribute.getValue("Launcher-Main-Class");
+			
+		} finally {
+			if (jarFile != null) {
+				jarFile.close();
+			}
+		}
 	}
 	
 	
 	public String getVmArgs(File file) throws Exception
 	{
-		final JarFile jarFile = new JarFile(file);
-		final Manifest manifest = jarFile.getManifest();
-		final Attributes attribute = manifest.getMainAttributes();
-		
-		return attribute.getValue("Launcher-VM-Args");
+		JarFile jarFile = null;
+		try {
+			
+			jarFile = new JarFile(file);
+			final Manifest manifest = jarFile.getManifest();
+			final Attributes attribute = manifest.getMainAttributes();
+			
+			return attribute.getValue("Launcher-VM-Args");
+			
+		} finally {
+			if (jarFile != null) {
+				jarFile.close();
+			}
+		}
 	}
 	
 	
